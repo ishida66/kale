@@ -7,11 +7,8 @@
 ?>
 <?php get_header(); ?>
 
-<?php if(is_front_page() && !is_paged() ) { 
-    get_template_part('parts/frontpage', 'banner'); 
-    get_template_part('parts/frontpage', 'featured'); 
-} ?>
 
+<div class="blog-feed">
 <!-- Two Columns -->
 <div class="row two-columns">
     <?php get_template_part('parts/feed'); ?>
@@ -19,9 +16,6 @@
 </div>
 <!-- /Two Columns -->
 <hr />
-
-<?php if(is_front_page() && !is_paged() ) { 
-    get_template_part('parts/frontpage', 'large'); 
-} ?>
+</div>
 
 <?php get_footer(); ?>

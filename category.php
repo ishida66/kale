@@ -13,7 +13,7 @@
     
     <!-- Blog Feed -->
     <div class="blog-feed">
-        <?php $kale_i = 0; $kale_ad = 0;
+        <?php $kale_i = 0; 
         if ( have_posts() ) { 
             while ( have_posts() ) : the_post(); ?>
             <?php if($kale_i%3 == 0) { ?><div class="row" data-fluid=".entry-title"><?php } ?>
@@ -28,8 +28,8 @@
     <?php if(get_next_posts_link() || get_previous_posts_link()) { ?>
     <hr />
     <div class="pagination-blog-feed">
-        <?php if( get_next_posts_link() ) { ?><div class="previous_posts"><?php next_posts_link( __('Previous Posts', 'kale') ); ?></div><?php } ?>
-        <?php if( get_previous_posts_link() ) { ?><div class="next_posts"><?php previous_posts_link( __('Next Posts', 'kale') ); ?></div><?php } ?>
+        <?php if( get_next_posts_link() ) { ?><div class="previous_posts"><?php next_posts_link( esc_html__('Previous Posts', 'kale') ); ?></div><?php } ?>
+        <?php if( get_previous_posts_link() ) { ?><div class="next_posts"><?php previous_posts_link( esc_html__('Next Posts', 'kale') ); ?></div><?php } ?>
     </div>
     <?php } ?>
 </div>

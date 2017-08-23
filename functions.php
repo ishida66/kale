@@ -20,7 +20,7 @@ require get_template_directory() . '/customize/customizer.php';
 
 function kale_customize_register( $wp_customize ) {
     $wp_customize->remove_control('header_textcolor');
-    $wp_customize->get_section('colors')->title = __( 'Custom Colors', 'kale' );
+    $wp_customize->get_section('colors')->title = esc_html__( 'Custom Colors', 'kale' );
     $wp_customize->get_section('colors')->priority = 75;
 }
 add_action( 'customize_register', 'kale_customize_register' );
@@ -40,13 +40,13 @@ function kale_setup() {
     
     load_theme_textdomain( 'kale', get_template_directory() . '/languages' ); 
     
-    register_nav_menus( array('header' => __( 'Main Menu', 'kale' )) );
+    register_nav_menus( array('header' => esc_html__( 'Main Menu', 'kale' )) );
     
     add_theme_support( 'automatic-feed-links' );
     add_theme_support( 'title-tag' );
     add_theme_support( 'custom-logo', array('height' => 150, 'width' => 300,'flex-height' => true,'flex-width'  => true ) );
     add_theme_support( 'custom-background');
-	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption' ) );
+	add_theme_support( 'html5', array( 'comment-form', 'comment-list', 'gallery', 'caption' ) );
     
     $args = array(
         'flex-width'    => true,
@@ -63,6 +63,26 @@ function kale_setup() {
     add_image_size( 'kale-thumbnail', 760, 400, true );
 
     add_post_type_support('page', 'excerpt');
+    
+    #https://make.wordpress.org/core/2016/11/26/extending-the-custom-css-editor/
+    if ( function_exists( 'wp_update_custom_css_post' ) ) {
+        $css = kale_get_option('kale_advanced_css');
+        if ( $css ) {
+            $core_css = wp_get_custom_css(); 
+            $return = wp_update_custom_css_post( $core_css . $css );
+            if ( ! is_wp_error( $return ) ) {
+                remove_theme_mod( 'kale_advanced_css' );
+            }
+        }
+    }
+	
+	#WooCommerce
+	if ( class_exists( 'WooCommerce' ) ) {
+		add_theme_support( 'wc-product-gallery-zoom' );
+		add_theme_support( 'wc-product-gallery-lightbox' );
+		add_theme_support( 'wc-product-gallery-slider' );
+		add_theme_support( 'woocommerce' );
+	}
 }
 add_action( 'after_setup_theme', 'kale_setup' );
 
@@ -80,21 +100,24 @@ function kale_scripts() {
     wp_register_style('owl-carousel', get_template_directory_uri().'/assets/css/owl.carousel.css' );
 
     //fonts
-    wp_register_style('kale-googlefont1', '//fonts.googleapis.com/css?family=Montserrat:400,700'); #headings
-    wp_register_style('kale-googlefont2', '//fonts.googleapis.com/css?family=Lato:400,700,300,300italic,400italic,700italic'); #body
-    wp_register_style('kale-googlefont3', '//fonts.googleapis.com/css?family=Raleway:200'); #logo
-    wp_register_style('kale-googlefont4', '//fonts.googleapis.com/css?family=Caveat'); #tagline
-    wp_enqueue_style('kale-googlefont1');
-    wp_enqueue_style('kale-googlefont2');
-    wp_enqueue_style('kale-googlefont3');
-    wp_enqueue_style('kale-googlefont4');
-
+    wp_enqueue_style('kale-googlefont1', '//fonts.googleapis.com/css?family=Montserrat:400,700'); #headings
+    wp_enqueue_style('kale-googlefont2', '//fonts.googleapis.com/css?family=Lato:400,700,300,300italic,400italic,700italic'); #body
+    wp_enqueue_style('kale-googlefont3', '//fonts.googleapis.com/css?family=Raleway:200'); #logo
+    wp_enqueue_style('kale-googlefont4', '//fonts.googleapis.com/css?family=Caveat'); #tagline
+    
     //default stylesheet
     $deps = array('bootstrap', 'bootstrap-select', 'font-awesome', 'owl-carousel');
-    wp_register_style('kale-style', get_stylesheet_uri(), $deps );
-    wp_enqueue_style('kale-style' );
-    
+    wp_enqueue_style('kale-style', get_stylesheet_uri(), $deps );
+    wp_style_add_data( 'kale-style', 'rtl', 'replace' );
+	
     /* Scripts */
+    
+    // Load html5shiv.min.js
+	wp_enqueue_script( 'kale-html5', get_template_directory_uri() . '/assets/js/html5shiv.min.js', array(), '3.7.0' );
+	wp_script_add_data( 'kale-html5', 'conditional', 'lt IE 9' );
+    // Load respond.min.js
+	wp_enqueue_script( 'kale-respond', get_template_directory_uri() . '/assets/js/respond.min.js', array(), '1.3.0' );
+	wp_script_add_data( 'kale-respond', 'conditional', 'lt IE 9' );
     
     wp_enqueue_script('bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js', array('jquery'), '', true );
     wp_enqueue_script('bootstrap-select', get_template_directory_uri() . '/assets/js/bootstrap-select.min.js', array('jquery','bootstrap'), '', true );
@@ -113,16 +136,38 @@ add_action( 'wp_enqueue_scripts', 'kale_scripts' );
  Custom CSS
  ------------------------------*/
 
+if ( ! function_exists( 'kale_custom_css_banner_overlay' ) ) :
+function kale_custom_css_banner_overlay(){ 
+	global $kale_defaults;
+    $kale_frontpage_banner_overlay_color = kale_get_option('kale_frontpage_banner_overlay_color');
+	$kale_frontpage_banner_overlay_show = kale_get_option('kale_frontpage_banner_overlay_show');
+	$kale_frontpage_banner_link_images = kale_get_option('kale_frontpage_banner_link_images');
+    if($kale_frontpage_banner_overlay_show == 0 || $kale_frontpage_banner_link_images == 1){
+		echo "<style>";
+		echo ".frontpage-banner:before, .frontpage-slider .owl-carousel-item:before{content:none;}";
+		echo "</style>";
+	} else if($kale_frontpage_banner_overlay_color != $kale_defaults['kale_frontpage_banner_overlay_color']) {
+		echo "<style>";
+		echo ".frontpage-banner:before, .frontpage-slider .owl-carousel-item:before{background-color:".esc_attr($kale_frontpage_banner_overlay_color).";}"; 
+		echo "</style>";
+	}
+} 
+endif;
+add_action('wp_head','kale_custom_css_banner_overlay', 98);
+
+if ( ! function_exists( 'kale_custom_css' ) ) :
 function kale_custom_css() {
     $kale_advanced_css = kale_get_option('kale_advanced_css');
     if($kale_advanced_css != '') {    
         echo '<!-- Custom CSS -->';
-        $output="<style>" . stripslashes($kale_advanced_css) . "</style>";
+        $output = "<style>" . wp_strip_all_tags($kale_advanced_css) . "</style>";
         echo $output;
         echo '<!-- /Custom CSS -->';
     }
 }
+endif;
 add_action('wp_head','kale_custom_css', 99);
+
 
 /*------------------------------
  Widgets
@@ -172,16 +217,6 @@ function kale_register_required_plugins() {
  Filters
  ------------------------------*/
 
-#disable comments on media attachments
-function kale_filter_media_comment_status( $open, $post_id ) {
-	$post = get_post( $post_id );
-	if( $post->post_type == 'attachment' ) {
-		return false;
-	}
-	return $open;
-}
-add_filter( 'comments_open', 'kale_filter_media_comment_status', 10 , 2 );
-
 #move comment field to the bottom of the comments form
 function kale_move_comment_field_to_bottom( $fields ) {
     $comment_field = $fields['comment'];
@@ -203,6 +238,36 @@ function kale_wp_page_menu_class( $class ) {
 }
 add_filter( 'wp_page_menu', 'kale_wp_page_menu_class' );
 
+//https://gist.github.com/hatsumatsu/e5df3b0bf9ac3389c0b0
+#doesn't work?
+add_filter('embed_oembed_html', 'kale_embed_oembed_html', 10, 4);
+function kale_embed_oembed_html($html, $url, $attr, $post_id) {
+	$class = ' ';
+	if( strpos( $url, 'youtu' ) || strpos( $url, 'vimeo' ) ) {
+		$class .= ' iframe-video';
+	}
+	return '<div class="' . esc_attr( $class ) . '">' . $html . '</div>';
+}
+
+
+
+#get_the_archive_title
+function kale_archive_title( $title ) {
+    if( is_home() && get_option('page_for_posts') ) {
+        $title = get_page( get_option('page_for_posts') )->post_title;
+    }
+    else if( is_home() ) {
+        $title = kale_get_option('kale_blog_feed_label');
+        $title = esc_html($title);
+    }  
+    return $title;
+}
+add_filter( 'get_the_archive_title', 'kale_archive_title' );
+
+/*------------------------------
+ Top Navigation
+ ------------------------------*/
+ 
 #add search form to nav
 function kale_nav_items_wrap() {
     // default value of 'items_wrap' is <ul id="%1$s" class="%2$s">%3$s</ul>'
@@ -223,7 +288,7 @@ function kale_get_nav_search_item(){
         <a href="javascript:;" id="toggle-main_search" data-toggle="dropdown"><i class="fa fa-search"></i></a>
         <div class="dropdown-menu main_search">
             <form name="main_search" method="get" action="'.esc_url(home_url( '/' )).'">
-                <input type="text" name="s" class="form-control" placeholder="'.__('Type here','kale').'" />
+                <input type="text" name="s" class="form-control" placeholder="'. esc_attr(__('Type here','kale')).'" />
             </form>
         </div>
     </li>';
@@ -237,12 +302,12 @@ function kale_default_nav(){
     $n = count($pages); 
     $i=0;
     foreach ( $pages as $page ) {
-        $menu_name = $page->post_title;
+        $menu_name = esc_html($page->post_title);
         $menu_link = get_page_link( $page->ID );
-        if(get_the_ID() == $page->ID) $current_class = "current_page_item";
-        else { $current_class = ''; $home_current_class = ''; }
-        $menu_class = "page-item-" . $page_id;
-        echo "<li class='page_item $menu_class $current_class'><a href='$menu_link'>$menu_name</a></li>";
+        if(get_the_ID() == $page->ID) $current_class = "current_page_item current-menu-item";
+        else { $current_class = ''; }
+        $menu_class = "page-item-" . $page->ID;
+        echo "<li class='page_item ".esc_attr($menu_class)." $current_class'><a href='".esc_url($menu_link)."'>".esc_html($menu_name)."</a></li>";
         $i++;
         if($n == $i){
             echo kale_get_nav_search_item();
@@ -256,26 +321,7 @@ function kale_default_nav(){
  Helper
  ------------------------------*/
  
-function kale_get_random_category(){
-    $categories = get_categories(array('hide_empty'   => 0));
-    foreach( $categories as $category ) 
-        $temp[] = $category->term_id; 
-    $rand_key = array_rand($temp, 1); 
-    return ($temp[$rand_key]);
-}
-
-function kale_get_random_post(){
-    $temp = array();
-    $posts = get_posts( array( 'numberposts' => -1 ) );
-    foreach( $posts as $post ) 
-        $temp[] = $post->ID; 
-    if($temp) {     
-        $rand_key = array_rand($temp, 1); 
-        return ($temp[$rand_key]);
-    }
-    return '';
-}
-
+if ( ! function_exists( 'kale_get_option' ) ) :
 function kale_get_option($key){
     global $kale_defaults;
     if (array_key_exists($key, $kale_defaults)) 
@@ -284,7 +330,9 @@ function kale_get_option($key){
         $value = get_theme_mod($key);
     return $value;
 }
+endif;
 
+if ( ! function_exists( 'kale_get_bootstrap_class' ) ) :
 function kale_get_bootstrap_class($columns){
     switch($columns){
         case 1: return 'col-md-12'; break;
@@ -295,6 +343,9 @@ function kale_get_bootstrap_class($columns){
         case 6: return 'col-lg-2 col-md-2 col-sm-2 col-xs-6'; break;
     }
 }
+endif;
+
+if ( ! function_exists( 'kale_get_sample' ) ) :
 function kale_get_sample($what){
     global $kale_defaults;
     switch($what){
@@ -305,34 +356,27 @@ function kale_get_sample($what){
         case 'kale-index':      $images = $kale_defaults['kale_index_sample']; $rand_key = array_rand($images, 1); return ($images[$rand_key]);    
     }
 }
+endif;
 
-function kale_title() {
-    if( is_home() && get_option('page_for_posts') ) :
-        echo apply_filters('the_title', get_page( get_option('page_for_posts') )->post_title);
-    elseif(is_home() && 'posts' == get_option( 'show_on_front' ) ) :
-        _e('Recent Posts', 'kale');
-    elseif ( is_page() ) :
-        $title = get_the_title(); if($title != '') the_title(); else echo __("Page ID: ", 'kale') . get_the_ID();
-    elseif (is_single() ):
-        $title = get_the_title(); if($title != '') the_title(); else echo __("Post ID: ", 'kale') . get_the_ID();
-    elseif ( is_category() ) :
-        single_cat_title();
-    elseif ( is_tag() ) :
-        _e('Tag: ', 'kale'); single_tag_title();
-    elseif ( is_author() ) :
-        printf( esc_html__( 'Author: %s', 'kale' ), '<span>' . get_the_author() . '</span>' );
-    elseif ( is_day() ) :
-        printf( esc_html__( 'Day: %s', 'kale' ), '<span>' . get_the_date() . '</span>' );
-    elseif ( is_month() ) :
-        printf( esc_html__( 'Month: %s', 'kale' ), '<span>' . get_the_date( _x( 'F Y', 'monthly archives date format', 'kale' ) ) . '</span>' );
-    elseif ( is_year() ) :
-        printf( esc_html__( 'Year: %s', 'kale' ), '<span>' . get_the_date( _x( 'Y', 'yearly archives date format', 'kale' ) ) . '</span>' );
-    elseif ( is_404() ) :
-        _e('Not Found!', 'kale');
-    elseif ( is_search() ) :
-        _e('Search Results: ', 'kale'); echo get_search_query();
-    else :
-        _e( 'Archives', 'kale' );
-    endif;
-} 
+if ( ! function_exists( 'kale_show_custom_css_field' ) ) :
+function kale_show_custom_css_field(){
+    if(get_bloginfo('version') >= 4.7){
+        $kale_advanced_css = kale_get_option('kale_advanced_css');
+        if($kale_advanced_css == '') return false;
+        else return true;
+    } 
+    return true;
+}
+endif;
+
+#kale_example_sidebar
+function kale_example_sidebar(){
+    echo '<div class="sidebar-default sidebar-block sidebar-no-borders" >';
+    the_widget('WP_Widget_Search', 'title=' . esc_html__('Search', 'kale'), 'before_title=<h3 class="widget-title"><span>&after_title=</span></h3>&before_widget=<div class="default-widget widget widget_search">&after_widget=</div>');
+    the_widget('WP_Widget_Pages', 'title=' . esc_html__('Pages', 'kale') , 'before_title=<h3 class="widget-title"><span>&after_title=</span></h3>&before_widget=<div class="default-widget widget">&after_widget=</div>');
+    the_widget('WP_Widget_Recent_Posts', 'title=' . esc_html__('Recent Posts', 'kale') , 'before_title=<h3 class="widget-title"><span>&after_title=</span></h3>&before_widget=<div class="default-widget widget">&after_widget=</div>');
+    the_widget( 'WP_Widget_Archives', 'title=' . esc_html__('Archives', 'kale'), 'before_title=<h3 class="widget-title"><span>&after_title=</span></h3>&before_widget=<div class="default-widget widget">&after_widget=</div>');
+    the_widget( 'WP_Widget_Categories', 'title=' . esc_html__('Categories', 'kale'), 'before_title=<h3 class="widget-title"><span>&after_title=</span></h3>&before_widget=<div class="default-widget widget">&after_widget=</div>');
+    echo '</div>';
+}
 ?>

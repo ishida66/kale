@@ -12,7 +12,7 @@ function kale_widgets_init() {
     /* Sidebar Widgets */
     
     register_sidebar( array(
-		'name'          => __( 'Sidebar - Default', 'kale' ),
+		'name'          => esc_html__( 'Sidebar - Default', 'kale' ),
 		'id'            => 'sidebar-default',
 		'before_widget' => '<div id="%1$s" class="default-widget widget %2$s">',
 		'after_widget'  => '</div>',
@@ -21,7 +21,7 @@ function kale_widgets_init() {
 	) );
     
     register_sidebar( array(
-		'name'          => __( 'Sidebar - Default - Bordered', 'kale' ),
+		'name'          => esc_html__( 'Sidebar - Default - Bordered', 'kale' ),
 		'id'            => 'sidebar-default-bordered',
 		'before_widget' => '<div id="%1$s" class="default-widget widget widget-bordered %2$s">',
 		'after_widget'  => '</div>',
@@ -32,18 +32,18 @@ function kale_widgets_init() {
     /* Header Widgets */
     
 	register_sidebar( array(
-		'name'          => __( 'Header - Left', 'kale' ),
+		'name'          => esc_html__( 'Header - Left', 'kale' ),
 		'id'            => 'header-row-1-left',
-		'description'   => __( 'Add widgets here to appear in the top left area.', 'kale' ),
+		'description'   => esc_html__( 'Add widgets here to appear in the top left area.', 'kale' ),
 		'before_widget' => '<div id="%1$s" class="header-widget widget %2$s">',
 		'after_widget'  => '</div>',
 		'before_title'  => '<h3 class="header-widget-title">',
 		'after_title'   => '</h3>',
 	) );
     register_sidebar( array(
-		'name'          => __( 'Header - Right', 'kale' ),
+		'name'          => esc_html__( 'Header - Right', 'kale' ),
 		'id'            => 'header-row-1-right',
-		'description'   => __( 'Add widgets here to appear in the top right area.', 'kale' ),
+		'description'   => esc_html__( 'Add widgets here to appear in the top right area.', 'kale' ),
 		'before_widget' => '<div id="%1$s" class="header-widget widget %2$s">',
 		'after_widget'  => '</div>',
 		'before_title'  => '<h3 class="header-widget-title">',
@@ -53,7 +53,7 @@ function kale_widgets_init() {
     /* Footer Widgets */
         
     register_sidebar( array(
-		'name'          => __( 'Footer Secondary - Col 1', 'kale' ),
+		'name'          => esc_html__( 'Footer Secondary - Col 1', 'kale' ),
 		'id'            => 'footer-row-2-col-1',
 		'before_widget' => '<div id="%1$s" class="footer-row-2-widget widget %2$s">',
 		'after_widget'  => '</div>',
@@ -61,7 +61,7 @@ function kale_widgets_init() {
 		'after_title'   => '</h3>',
 	) );
     register_sidebar( array(
-		'name'          => __( 'Footer Secondary - Col 2', 'kale' ),
+		'name'          => esc_html__( 'Footer Secondary - Col 2', 'kale' ),
 		'id'            => 'footer-row-2-col-2',
 		'before_widget' => '<div id="%1$s" class="footer-row-2-widget widget %2$s">',
 		'after_widget'  => '</div>',
@@ -69,7 +69,7 @@ function kale_widgets_init() {
 		'after_title'   => '</h3>',
 	) );
     register_sidebar( array(
-		'name'          => __( 'Footer Secondary - Col 3', 'kale' ),
+		'name'          => esc_html__( 'Footer Secondary - Col 3', 'kale' ),
 		'id'            => 'footer-row-2-col-3',
 		'before_widget' => '<div id="%1$s" class="footer-row-2-widget widget %2$s">',
 		'after_widget'  => '</div>',
@@ -77,7 +77,7 @@ function kale_widgets_init() {
 		'after_title'   => '</h3>',
 	) );
     register_sidebar( array(
-		'name'          => __( 'Footer Secondary - Col 4', 'kale' ),
+		'name'          => esc_html__( 'Footer Secondary - Col 4', 'kale' ),
 		'id'            => 'footer-row-2-col-4',
 		'before_widget' => '<div id="%1$s" class="footer-row-2-widget widget %2$s">',
 		'after_widget'  => '</div>',
@@ -85,7 +85,7 @@ function kale_widgets_init() {
 		'after_title'   => '</h3>',
 	) );
     register_sidebar( array(
-		'name'          => __( 'Footer Secondary - Col 5', 'kale' ),
+		'name'          => esc_html__( 'Footer Secondary - Col 5', 'kale' ),
 		'id'            => 'footer-row-2-col-5',
 		'before_widget' => '<div id="%1$s" class="footer-row-2-widget widget %2$s">',
 		'after_widget'  => '</div>',
@@ -94,7 +94,7 @@ function kale_widgets_init() {
 	) );
     
     register_sidebar( array(
-		'name'          => __( 'Footer - Last', 'kale' ),
+		'name'          => esc_html__( 'Footer - Last', 'kale' ),
 		'id'            => 'footer-row-3-center',
 		'before_widget' => '<div id="%1$s" class="footer-row-3-widget widget %2$s">',
 		'after_widget'  => '</div>',

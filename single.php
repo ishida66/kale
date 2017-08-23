@@ -15,7 +15,7 @@ $kale_posts_author_show = kale_get_option('kale_posts_author_show');
 $kale_posts_tags_show = kale_get_option('kale_posts_tags_show');
 $kale_posts_sidebar = kale_get_option('kale_posts_sidebar');
 $kale_posts_featured_image_show = kale_get_option('kale_posts_featured_image_show');
-
+$kale_sidebar_size = kale_get_option('kale_sidebar_size');
 ?>
 <?php while ( have_posts() ) : the_post(); ?>
 <!-- Two Columns -->
@@ -23,7 +23,7 @@ $kale_posts_featured_image_show = kale_get_option('kale_posts_featured_image_sho
 
     <!-- Main Column -->
     <?php if($kale_posts_sidebar == 1) { ?>
-    <div class="main-column col-md-8">
+    <div class="main-column <?php if($kale_sidebar_size == 0) { ?> col-md-8 <?php } else { ?> col-md-9 <?php } ?>">
     <?php } else { ?>
     <div class="main-column col-md-12">
     <?php } ?>
@@ -34,7 +34,7 @@ $kale_posts_featured_image_show = kale_get_option('kale_posts_featured_image_sho
             <div class="entry-header">
 				<?php if($kale_posts_meta_show == 1 && $kale_posts_date_show == 1) { ?>
                 <div class="entry-meta">
-                    <div class="entry-date"><?php the_date(); ?></div>
+                    <div class="entry-date date updated"><?php the_date(); ?></div>
                 </div>
 				<?php } ?>
 				<div class="clearfix"></div>
@@ -42,7 +42,7 @@ $kale_posts_featured_image_show = kale_get_option('kale_posts_featured_image_sho
             
             <?php $title = get_the_title(); ?>
             <?php if($title == '') { ?>
-            <h1 class="entry-title"><?php _e('Post ID: ', 'kale'); the_ID(); ?></h1>
+            <h1 class="entry-title"><?php esc_html_e('Post ID: ', 'kale'); the_ID(); ?></h1>
             <?php } else { ?>
             <h1 class="entry-title"><?php the_title(); ?></h1>
             <?php } ?>
@@ -55,13 +55,15 @@ $kale_posts_featured_image_show = kale_get_option('kale_posts_featured_image_sho
             
             <div class="entry-content">
                 <?php the_content(); ?>
+                <?php wp_link_pages(); ?>
             </div>
             
-            <?php if(  ( $kale_posts_meta_show == 1 && ($kale_posts_category_show == 1 || $kale_posts_tags_show == 1) )  ) { ?>
+            <?php if(  ( $kale_posts_meta_show == 1 && ($kale_posts_category_show == 1 || $kale_posts_tags_show == 1 || $kale_posts_author_show == 1) )  ) { ?>
             <div class="entry-footer">
                 <div class="entry-meta">
-                    <?php if($kale_posts_category_show == 1 && has_category()) { ?><div class="entry-category"><span><?php _e('Filed Under: ', 'kale'); ?></span><?php the_category(', '); ?></div><?php } ?>
-                    <?php if($kale_posts_tags_show == 1 && has_tag()) { ?><div class="entry-tags"><span><?php _e('Tags: ', 'kale'); ?></span><?php the_tags('',', '); ?></div><?php } ?>
+                    <?php if($kale_posts_author_show == 1) { ?><div class="entry-author"><span><?php esc_html_e('Author: ', 'kale'); ?></span><span class="vcard author author_name"><span class="fn"><?php the_author_posts_link(); ?></span></span></div><?php } ?>
+					<?php if($kale_posts_category_show == 1 && has_category()) { ?><div class="entry-category"><span><?php esc_html_e('Filed Under: ', 'kale'); ?></span><?php the_category(', '); ?></div><?php } ?>
+                    <?php if($kale_posts_tags_show == 1 && has_tag()) { ?><div class="entry-tags"><span><?php esc_html_e('Tags: ', 'kale'); ?></span><?php the_tags('',', '); ?></div><?php } ?>
                 </div>
             </div>
             <?php } ?>

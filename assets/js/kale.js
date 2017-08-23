@@ -14,6 +14,7 @@ jQuery(document).ready(function($){
 		loop:true,
 		nav:true,
 		dots:false,
+        autoplay: true,
 		items:1,
 		animateOut: 'fadeOut',
 		animateIn: 'fadeIn'

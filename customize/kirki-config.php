@@ -100,7 +100,7 @@ function kale_kirki_config() {
 
 	$args = array(
         'logo_image'     => get_template_directory_uri() . '/customize/images/logo.png',
-        'url_path'       => get_stylesheet_directory_uri() . '/inc/kirki/',
+        'url_path'       => get_template_directory_uri() . '/inc/kirki/',
         'textdomain'     => 'kale',
         'i18n'           => $strings,		
         'disable_loader' => true,

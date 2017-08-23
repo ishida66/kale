@@ -5,11 +5,11 @@
  * GitHub URI: https://github.com/twittem/wp-bootstrap-navwalker
  * Description: A custom WordPress nav walker class to implement the Bootstrap 3 navigation style in a custom theme using the WordPress built in menu manager.
  * Version: 2.0.4
- * Author: Edward McIntyre - @twittem
+ * Author: Edward McIntyre - @twittem / Modified by LyraThemes 
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
-
+if (!class_exists('wp_bootstrap_navwalker')) {
 class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 
 	/**
@@ -76,7 +76,13 @@ class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 			$output .= $indent . '<li' . $id . $value . $class_names .'>';
 
 			$atts = array();
-			$atts['title']  = ! empty( $item->title )	? $item->title	: '';
+			
+			$pos = strpos($item->attr_title, 'glyphicon');
+			if ($pos === false) {
+				$atts['title']  = ! empty( $item->title )	? $item->attr_title	: '';
+			} else {
+				$atts['title']  = ! empty( $item->title )	? $item->title	: '';
+			}
 			$atts['target'] = ! empty( $item->target )	? $item->target	: '';
 			$atts['rel']    = ! empty( $item->xfn )		? $item->xfn	: '';
 
@@ -109,10 +115,16 @@ class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 			 * if there is a value in the attr_title property. If the attr_title
 			 * property is NOT null we apply it as the class name for the glyphicon.
 			 */
-			if ( ! empty( $item->attr_title ) )
-				$item_output .= '<a'. $attributes .'><span class="glyphicon ' . esc_attr( $item->attr_title ) . '"></span>&nbsp;';
-			else
+			if ( ! empty( $item->attr_title ) ){
+				$pos = strpos($item->attr_title, 'glyphicon');
+				if ($pos === false) {
+					$item_output .= '<a'. $attributes .'>';
+				} else {
+					$item_output .= '<a'. $attributes .'><span class="glyphicon ' . esc_attr( $item->attr_title ) . '"></span>&nbsp;';
+				}
+			} else {
 				$item_output .= '<a'. $attributes .'>';
+			}
 
 			$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
 			$item_output .= ( $args->has_children && 0 === $depth ) ? ' <span class="caret"></span></a>' : '</a>';
@@ -194,7 +206,7 @@ class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 				$fb_output .= ' class="' . $menu_class . '"';
 
 			$fb_output .= '>';
-			$fb_output .= '<li><a href="' . admin_url( 'nav-menus.php' ) . '">Add a menu</a></li>';
+			$fb_output .= '<li><a href="' . admin_url( 'nav-menus.php' ) . '">'. esc_html__('Add a menu', 'kale') .'</a></li>';
 			$fb_output .= '</ul>';
 
 			if ( $container )
@@ -203,4 +215,5 @@ class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 			echo $fb_output;
 		}
 	}
+}
 }

@@ -21,29 +21,35 @@ if($kale_frontpage_featured_posts_show == 1) {
             <div class="col-md-4">
                 <?php 
                 $post = get_post($kale_frontpage_featured_posts_post_1); 
-                setup_postdata($post); 
-                include(locate_template('parts/entry.php'));
-                wp_reset_postdata(); 
+                if($post) {
+					setup_postdata($post); 
+					include(locate_template('parts/entry.php'));
+					wp_reset_postdata(); 
+				}
                 ?>
             </div>
             <div class="col-md-4">
                 <?php 
                 $post = get_post($kale_frontpage_featured_posts_post_2); 
-                setup_postdata($post); 
-                include(locate_template('parts/entry.php'));
-                wp_reset_postdata(); 
+				if($post) {
+					setup_postdata($post); 
+					include(locate_template('parts/entry.php'));
+					wp_reset_postdata(); 
+				}
                 ?>
             </div>
             <div class="col-md-4">
                 <?php 
                 $post = get_post($kale_frontpage_featured_posts_post_3); 
-                setup_postdata($post); 
-                include(locate_template('parts/entry.php'));
-                wp_reset_postdata(); 
+				if($post) {
+					setup_postdata($post); 
+					include(locate_template('parts/entry.php'));
+					wp_reset_postdata(); 
+				}
                 ?>
             </div>
         </div>
-    </div>
-    <!-- /Frontpage Featured Posts -->
     <hr />
+	</div>
+	<!-- /Frontpage Featured Posts -->
 <?php } ?>

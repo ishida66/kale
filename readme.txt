@@ -1,9 +1,9 @@
 === Kale ===
 
 Author: LyraThemes www.lyrathemes.com
-Requires at least: WordPress 4.5
-Tested up to: WordPress 4.5.2
-Version: 1.1.4
+Requires at least: WordPress 4.7+
+Tested up to: WordPress 4.7+
+Version: 1.2.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
 Tags: one-column, two-columns, three-columns, right-sidebar, grid-layout, flexible-header, custom-background, custom-colors, custom-header, custom-menu, featured-images,footer-widgets, full-width-template, theme-options, threaded-comments, translation-ready, food-and-drink
@@ -58,6 +58,22 @@ The theme uses the following third-party resources:
 * Owl Carousel v1.3.2. MIT. http://owlgraphic.com/owlcarousel/
 * Kirki v. GPLv2 or later
 * TGM-Plugin-Activation v2.6.1 (c) Thomas Griffin. GPL-2.0+. http://tgmpluginactivation.com/
-* Font Awesome 4.3.0 by Dave Gandy. MIT. http://fontawesome.io
+* Font Awesome 4.7 by Dave Gandy. MIT. http://fontawesome.io
 * wp-bootstrap-navwalker (c) Edward McIntyre. GPL-2.0. https://github.com/twittem/wp-bootstrap-navwalker
 * Sample preview images in kale/sample/images are Creative Commons CC0. https://pixabay.com/en/service/terms/#usage https://unsplash.com/license https://picjumbo.com/faq-and-terms/
+
+full1.jpg   https://unsplash.com/photos/tJWUHtIDzWs
+full2.jpg   https://picjumbo.com/girl-reading-a-blog-in-a-bedroom/
+full3.jpg   https://unsplash.com/photos/PMxoh8zJNb0
+header.jpg  https://pixabay.com/en/top-view-closeup-vegetarianism-1248949/
+slide1.jpg  https://pixabay.com/en/top-view-closeup-vegetarianism-1248949/
+slide2.jpg  https://unsplash.com/photos/O1TNdLNvJLM
+slide3.jpg  https://pixabay.com/en/blue-blueberry-delicious-fruit-1326154/
+thumb1.jpg  https://picjumbo.com/fresh-healthy-fitness-broccoli-pie-with-basil/
+thumb2.jpg  https://unsplash.com/photos/ya5oLwJff4g
+thumb3.jpg  https://unsplash.com/photos/qpf2glK0bAA
+thumb4.jpg  https://unsplash.com/photos/KK1hlAI2lgE
+thumb5.jpg  https://unsplash.com/search/food?photo=KwnMOxpHLE4
+
+
+

@@ -8,20 +8,14 @@
  */
 ?>
 <!DOCTYPE html>
-<html <?php language_attributes(); ?>
+<html <?php language_attributes(); ?>>
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
-    
-    <?php wp_site_icon(); ?>
-    
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/html5shiv.js"></script>
-    <script type="text/javascript" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/js/respond.min.js"></script>
-    <![endif]-->
-    
+    <?php if ( is_singular() && pings_open( get_queried_object() ) ) : ?>
+	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
+	<?php endif; ?>
     <?php wp_head(); ?>
 </head>
 
@@ -37,17 +31,19 @@
             <!-- Header Row 1 -->
             <div class="header-row-1">
                 <div class="row">
-                    <?php if ( is_active_sidebar( 'header-row-1-left' ) ) { ?>
-                    <!-- Widget / Social Menu -->
-                    <div class="col-sm-6 header-row-1-left"><?php dynamic_sidebar( 'header-row-1-left' ); ?></div>
-                    <!-- /Widget / Social Menu -->
-                    <?php } ?>
-                    
-                    <?php if ( is_active_sidebar( 'header-row-1-right' ) ) { ?>
+				
+					<!-- Widget / Social Menu -->
+                    <div class="col-sm-6 header-row-1-left">
+					<?php if ( is_active_sidebar( 'header-row-1-left' ) ) { ?><?php dynamic_sidebar( 'header-row-1-left' ); ?><?php } ?>
+                    </div>
+					<!-- /Widget / Social Menu -->
+					
                     <!-- Widget / Top Menu -->
-                    <div class="col-sm-6 header-row-1-right"><?php dynamic_sidebar( 'header-row-1-right' ); ?></div>
-                    <!-- /Widget / Top Menu -->
-                    <?php } ?>
+					<div class="col-sm-6 header-row-1-right">
+					<?php if ( is_active_sidebar( 'header-row-1-right' ) ) { ?><?php dynamic_sidebar( 'header-row-1-right' ); ?><?php } ?>
+					</div>
+					<!-- /Widget / Top Menu -->
+					
                 </div>
             </div>
 			<div class="header-row-1-toggle"><i class="fa fa-angle-down"></i></div>
@@ -65,7 +61,13 @@
                         $kale_text_logo = kale_get_option('kale_text_logo');
                         if($kale_text_logo == '') $kale_text_logo = get_bloginfo('name');
                     ?>
-                        <h1 class="header-logo-text"><a href="<?php echo home_url('/'); ?>"><?php echo esc_html($kale_text_logo) ?></a></h1>
+					
+						<?php if ( is_front_page() ) { ?>
+						<h1 class="header-logo-text"><a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_html($kale_text_logo) ?></a></h1>
+						<?php } else { ?>
+						<div class="header-logo-text"><a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_html($kale_text_logo) ?></a></div>
+						<?php } ?>
+					
                     <?php } ?>
                 </div>
                 <?php if( display_header_text() ) { ?>
@@ -80,7 +82,7 @@
                 <nav class="navbar navbar-default">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".header-row-3 .navbar-collapse" aria-expanded="false">
-                        <span class="sr-only"><?php _e('Toggle Navigation', 'kale'); ?></span>
+                        <span class="sr-only"><?php esc_html_e('Toggle Navigation', 'kale'); ?></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -111,4 +113,9 @@
             
         </div>
         <!-- /Header -->
+        
+<?php if(is_front_page() && !is_paged() ) { 
+get_template_part('parts/frontpage', 'banner'); 
+get_template_part('parts/frontpage', 'featured'); 
+} ?>
         
